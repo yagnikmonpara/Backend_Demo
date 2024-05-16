@@ -20,7 +20,7 @@ export const registerUser = async (req, res) => {
     const newUser = new userModel({ username, fullName, email, password: hashedPassword });
     
     await newUser.save();
-u
+
     res.status(201).json({ success: true, message: "User registered successfully", user: newUser });
   } catch (error) {
     console.error(error);

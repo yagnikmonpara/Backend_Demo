@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import userModel from '../models/userModel.js';
+import Admin from '../models/adminModel.js';
 
 export const requireSignIn = async (req, res, next) => {
   try {
@@ -22,5 +23,18 @@ export const requireSignIn = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     res.status(401).json({ success: false, message: 'Authentication failed' });
+  }
+};
+export const requireAdmin = async (req, res, next) => {
+  try {
+    // Check if user is an admin
+    const admin = await Admin.findOne({ userId: req.user._id });
+    if (!admin) {
+      return res.status(403).json({ success: false, message: 'Admin privileges required' });
+    }
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error checking admin privileges', error });
   }
 };
